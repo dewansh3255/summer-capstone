@@ -1,0 +1,21 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.env
+venv/
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Large project files (not needed in repo)
+VR IP/
+audio.mp3
+2410.23625v2.pdf
+C4GT-IIITDelhiReport.pdf
+mynotes.txt
