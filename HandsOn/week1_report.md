@@ -1,7 +1,7 @@
 # Hands-On Report — Week 1
 **Submitted by:** Dewansh Khandelwal
 **Deadline:** Next Friday
-**Project:** DepthVR + Delsys — Multimodal Gesture Recognition
+**Project:** DepthVR + Delsys — Multimodal Gesture Recognition (Mélange Research Lab)
 
 ---
 
@@ -229,6 +229,5 @@ HandsOn/output/emg/
 ---
 
 *All code is available in:*
-- [`HandsOn/gesture_pipeline.py`](HandsOn/gesture_pipeline.py) — Computer Vision pipeline
-- [`HandsOn/emg_pipeline.py`](HandsOn/emg_pipeline.py) — EMG pipeline (script)
+- [`HandsOn/gesture_pipeline.ipynb`](HandsOn/gesture_pipeline.ipynb) — Computer Vision pipeline (Jupyter Notebook)
 - [`HandsOn/emg_pipeline.ipynb`](HandsOn/emg_pipeline.ipynb) — EMG pipeline (Jupyter Notebook)
