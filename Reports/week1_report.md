@@ -89,7 +89,7 @@ CD(A, B) = ( mean(min distance from each A point to B) +
 
 ### Output Files
 ```
-HandsOn/output/
+../HandsOn/output/
 ├── thumbs_up_landmarks.jpg     — MediaPipe skeleton overlay
 ├── thumbs_up_bg_removed.jpg    — Hand isolated on white background
 ├── thumbs_up_mask.jpg          — Binary hand mask
@@ -194,7 +194,7 @@ The mean RMS amplitude per (gesture, channel) pair reveals distinct **muscle act
 
 ### Output Files
 ```
-HandsOn/output/emg/
+../HandsOn/output/emg/
 ├── 1_raw_emg.png               — All 10 channels, raw signal (first 10 seconds)
 ├── 2_preprocessing_stages.png  — Raw → Bandpass → Rectified → RMS Envelope (Ch 1)
 ├── 3_per_gesture_envelopes.png — EMG envelope for each gesture, all 10 channels
@@ -229,5 +229,5 @@ HandsOn/output/emg/
 ---
 
 *All code is available in:*
-- [`HandsOn/gesture_pipeline.ipynb`](HandsOn/gesture_pipeline.ipynb) — Computer Vision pipeline (Jupyter Notebook)
-- [`HandsOn/emg_pipeline.ipynb`](HandsOn/emg_pipeline.ipynb) — EMG pipeline (Jupyter Notebook)
+- [`HandsOn/gesture_pipeline.ipynb`](../HandsOn/gesture_pipeline.ipynb) — Computer Vision pipeline (Jupyter Notebook)
+- [`HandsOn/emg_pipeline.ipynb`](../HandsOn/emg_pipeline.ipynb) — EMG pipeline (Jupyter Notebook)
