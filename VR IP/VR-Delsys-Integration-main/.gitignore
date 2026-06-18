@@ -36,6 +36,10 @@ venv/
 # Jupyter checkpoint
 .ipynb_checkpoints/
 
+# Recorded EMG session data — large CSV files (65+ MB)
+# Raw sensor data; not source code. Keep locally, don't commit.
+Python/dataset/
+
 # Visual Studio
 .vs/
 *.suo
