@@ -9,7 +9,7 @@ Receives hand joint data from the Meta Quest via WebSocket and runs the gesture 
 Meta Quest (Unity DepthVR)
     └── WebSocket (binary frames) ──► server.py
                                           └── protocol/frame_deserializer.py   [Step 1 ✅]
-                                          └── pipeline/point_cloud.py          [Step 2]
+                                          └── pipeline/point_cloud.py          [Step 2 ✅]
                                           └── pipeline/chamfer.py              [Step 3]
                                           └── pipeline/classifier.py           [Step 4]
 ```

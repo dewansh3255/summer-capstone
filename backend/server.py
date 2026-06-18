@@ -31,6 +31,7 @@ import websockets
 from websockets.server import WebSocketServerProtocol
 
 from protocol import deserialize_frame, Frame
+from pipeline import build_point_cloud
 
 # ──────────────────────────────────────────────────────────────────────────────
 # Logging
@@ -112,12 +113,16 @@ async def handle_connection(
 
             stats.record_frame(frame, verbose=verbose)
 
-            # ── PIPELINE HOOK ─────────────────────────────────────────────────
-            # Step 1: data is deserialized into `frame` (Frame object).
-            # Future steps will be called here, e.g.:
-            #   point_cloud = build_point_cloud(frame.right_hand)
-            #   distance    = chamfer_distance(point_cloud, reference)
-            #   label       = classifier.predict(point_cloud)
+            # ── PIPELINE ─────────────────────────────────────────────────────
+            # Step 1 ✅  deserialize raw bytes → Frame
+            # Step 2 ✅  HandData → normalised PointCloud
+            if frame.right_hand is not None:
+                pc = build_point_cloud(frame.right_hand, frame_index=frame.frame_index)
+                if pc is not None and verbose:
+                    log.debug("Frame %5d → %s", frame.frame_index, pc)
+
+            # Step 3 (TODO): chamfer_distance(pc, reference_clouds)
+            # Step 4 (TODO): classifier.predict(pc)
             # ─────────────────────────────────────────────────────────────────
 
     except websockets.exceptions.ConnectionClosedOK:
