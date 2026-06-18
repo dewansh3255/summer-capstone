@@ -1,0 +1,45 @@
+# Unity generated — never commit these
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+[Mm]emoryCaptures/
+[Rr]ecordings/
+
+# Unity cache and lock files
+*.pidb.meta
+*.pdb.meta
+*.mdb.meta
+sysinfo.txt
+crashlytics-build.properties
+*.suo
+*.csproj.user
+
+# Gesture video files — large binary assets (635 MB total)
+# Re-record or download separately; not source code.
+# .meta sidecar files are kept so Unity preserves asset GUIDs.
+Assets/Gesture Videos/**/*.mp4
+Assets/Gesture Videos/*.mp4
+
+# Auto-generated Visual Studio files
+.vs/
+*.sln.DotSettings.user
+
+# macOS
+.DS_Store
+.AppleDouble
+
+# IDE
+.idea/
+.vscode/
+
+# User-specific Unity settings (local preferences, not project settings)
+UserSettings/
+
+# Asset database rebuild artifacts
+Assets/AssetStoreTools*
+
+# Recovery folder — Unity editor auto-saves, not source
+Assets/_Recovery/

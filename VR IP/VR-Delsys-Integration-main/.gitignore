@@ -1,0 +1,44 @@
+# macOS
+.DS_Store
+.AppleDouble
+
+# Compiled binaries — not source code
+Unity/BuildVersions/
+Unity/BuildVersions/**
+
+# NuGet packages — restored automatically by dotnet restore / NuGet
+C# .NET/DelsysAPI/*.nupkg
+
+# DLL dependencies for Python demo — large, restored from Delsys SDK
+Python/resources/*.dll
+Python/resources/*.DLL
+
+# File reading example data and DLLs — large binary files
+# Source code examples (.ipynb, .py, .m) are kept; data/DLL files are not
+File Reading Examples/C# API/*.dll
+File Reading Examples/C# API/*.DLL
+File Reading Examples/C# API/*.delsys
+File Reading Examples/C# API/*.shpf
+File Reading Examples/MATLAB API/*.delsys
+File Reading Examples/MATLAB API/*.shpf
+File Reading Examples/MATLAB API/dependencies/
+File Reading Examples/Python API/*.delsys
+File Reading Examples/Python API/*.shpf
+File Reading Examples/Python API/dependencies/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*.pyo
+.env
+venv/
+
+# Jupyter checkpoint
+.ipynb_checkpoints/
+
+# Visual Studio
+.vs/
+*.suo
+*.user
+obj/
+bin/

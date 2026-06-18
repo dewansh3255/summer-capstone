@@ -13,9 +13,14 @@ venv/
 # Jupyter Notebook checkpoints
 .ipynb_checkpoints/
 
-# Large project files (not needed in repo)
-VR IP/
+# Large standalone files — not source code
 audio.mp3
 2410.23625v2.pdf
 C4GT-IIITDelhiReport.pdf
 mynotes.txt
+
+# VR IP — source code IS tracked; inner .gitignore files in
+#   "VR IP/frontend/"  and  "VR IP/VR-Delsys-Integration-main/"
+#   handle exclusions of Library/, BuildVersions/, DLLs, gesture videos, etc.
+# Only the single large MP4 screen-recording is excluded here:
+VR IP/com.oculus.vrshell-20260506-235023-0.mp4

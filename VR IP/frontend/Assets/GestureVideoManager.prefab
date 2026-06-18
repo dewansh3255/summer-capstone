@@ -1,0 +1,161 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &8871946413022558908
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8962447542162649332}
+  - component: {fileID: 8381453255302771768}
+  m_Layer: 0
+  m_Name: GestureVideoManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8962447542162649332
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8871946413022558908}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1.39855, y: -0, z: 5.72461}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8381453255302771768
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8871946413022558908}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a3ab3a3e9024b9c4a818eac9c9e795a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GestureVideoManager
+  videoPlayer: {fileID: 0}
+  gestureGroups:
+  - gestureName: 1. ASL_Y
+    angles:
+    - angleName: 0
+      video: {fileID: 32900000, guid: 4f387158d8b46744e95ec4cc4120f410, type: 3}
+      instruction: "Perform the ASL Y at 0\xB0 ten times."
+    - angleName: 45
+      video: {fileID: 32900000, guid: f3ef77eb3a8541043a76eb443b48eaf6, type: 3}
+      instruction: "Perform the ASL Y at 45\xB0 ten times."
+    - angleName: 90
+      video: {fileID: 32900000, guid: c2eb6a7b663249946aef878fe591600f, type: 3}
+      instruction: "Perform the ASL Y at 90\xB0 ten times."
+  - gestureName: 2. ASL_L
+    angles:
+    - angleName: 0
+      video: {fileID: 32900000, guid: 51539476d36706b4090290c2b9c408cc, type: 3}
+      instruction: "Perform the ASL L at 0\xB0 ten times."
+    - angleName: 45
+      video: {fileID: 32900000, guid: 5d569c5697c50284dbd02fb1f8045eda, type: 3}
+      instruction: "Perform the ASL L at 45\xB0 ten times."
+    - angleName: 90
+      video: {fileID: 32900000, guid: c5b704b5396675d4c8128a93e4926858, type: 3}
+      instruction: "Perform the ASL L at 90\xB0 ten times."
+  - gestureName: 3. Four
+    angles:
+    - angleName: 0
+      video: {fileID: 32900000, guid: ed223686f3fa954458b9a105c6242de4, type: 3}
+      instruction: "Perform the Four at 0\xB0 ten times."
+    - angleName: 45
+      video: {fileID: 32900000, guid: c616ebec6b5218d47b36492de0215525, type: 3}
+      instruction: "Perform the Four at 45\xB0 ten times."
+    - angleName: 90
+      video: {fileID: 32900000, guid: fb0a3a814908d3b4192914da0644c8df, type: 3}
+      instruction: "Perform the Four at 90\xB0 ten times."
+  - gestureName: 4. One
+    angles:
+    - angleName: 0
+      video: {fileID: 32900000, guid: 78620e5b5486189428b12818cd186e8e, type: 3}
+      instruction: "Perform the One at 0\xB0 ten times."
+    - angleName: 45
+      video: {fileID: 32900000, guid: f9692a6aa8a42ee42ac0cdc95136ddcf, type: 3}
+      instruction: "Perform the One at 45\xB0 ten times."
+    - angleName: 90
+      video: {fileID: 32900000, guid: c790dbdbea650d142aaa8d0f74e06e4c, type: 3}
+      instruction: "Perform the One at 90\xB0 ten times."
+  - gestureName: 5. Relax Palm
+    angles:
+    - angleName: 0
+      video: {fileID: 32900000, guid: 3fa5a0e79e68d674ca170ef7957e7e30, type: 3}
+      instruction: "Perform the Relax Palm at 0\xB0 ten times."
+    - angleName: 45
+      video: {fileID: 32900000, guid: 9cdcb3562c019274fa409a75dead3e38, type: 3}
+      instruction: "Perform the Relax Palm at 45\xB0 ten times."
+    - angleName: 90
+      video: {fileID: 32900000, guid: 56e7d0308968a4545a94c34bba842bd1, type: 3}
+      instruction: "Perform the Relax Palm at 90\xB0 ten times."
+  - gestureName: 6. Spiderman
+    angles:
+    - angleName: 0
+      video: {fileID: 32900000, guid: df9c3a591f350da4ab791d9abbdb2917, type: 3}
+      instruction: "Perform the Spiderman at 0\xB0 ten times."
+    - angleName: 45
+      video: {fileID: 32900000, guid: 475b7d37b2239a346bf616a58dcbc45d, type: 3}
+      instruction: "Perform the Spiderman at 45\xB0 ten times."
+    - angleName: 90
+      video: {fileID: 32900000, guid: d821667d1d4dd064b93dc6bddb42bc36, type: 3}
+      instruction: "Perform the Spiderman at 90\xB0 ten times."
+  - gestureName: 7. Spock Sign
+    angles:
+    - angleName: 0
+      video: {fileID: 32900000, guid: d77459aef30824340bc3fe0aa34dc7e0, type: 3}
+      instruction: "Perform the Spock at 0\xB0 ten times."
+    - angleName: 45
+      video: {fileID: 32900000, guid: eb63872a2f222fe468f94987d3d998a4, type: 3}
+      instruction: "Perform the Spock at 45\xB0 ten times."
+    - angleName: 90
+      video: {fileID: 32900000, guid: d97c30d2756ddfe4abfd77508441c53f, type: 3}
+      instruction: "Perform the Spock at 90\xB0 ten times."
+  - gestureName: 8. Three
+    angles:
+    - angleName: 0
+      video: {fileID: 32900000, guid: a469203f7bf4c2c41bcb00321718ec41, type: 3}
+      instruction: "Perform the Three at 0\xB0 ten times."
+    - angleName: 45
+      video: {fileID: 32900000, guid: 868c83451199d5e46abe1201c912286d, type: 3}
+      instruction: "Perform the Three at 45\xB0 ten times."
+    - angleName: 90
+      video: {fileID: 32900000, guid: 7277235618470a640886af8dbad5e48c, type: 3}
+      instruction: "Perform the Three at 90\xB0 ten times."
+  - gestureName: 9. Thumbs Up
+    angles:
+    - angleName: 0
+      video: {fileID: 32900000, guid: 4a2be3d144b3a4e4eb893604c39f26f1, type: 3}
+      instruction: "Perform the Thumbs Up at 0\xB0 ten times."
+    - angleName: 45
+      video: {fileID: 32900000, guid: 9bb2a62d7ab93d44ab3df3df963f20d6, type: 3}
+      instruction: "Perform the Thumbs Up at 45\xB0 ten times."
+    - angleName: 90
+      video: {fileID: 32900000, guid: 8ba30801448f2fb4aa8507328052c143, type: 3}
+      instruction: "Perform the Thumbs Up at 90\xB0 ten times."
+  - gestureName: 10. Two
+    angles:
+    - angleName: 0
+      video: {fileID: 32900000, guid: 378241d761a219447815611bfb7eb900, type: 3}
+      instruction: "Perform the Two at 0\xB0 ten times."
+    - angleName: 45
+      video: {fileID: 32900000, guid: 094b229d73715734892e6e7d51f07e59, type: 3}
+      instruction: "Perform the Two at 45\xB0 ten times."
+    - angleName: 90
+      video: {fileID: 32900000, guid: f699c567d4e488e4098cb4a13739e163, type: 3}
+      instruction: "Perform the Two at 90\xB0 ten times."
+  instructionText: {fileID: 0}
+  generalInstructionsPanel: {fileID: 0}
+  videoPanel: {fileID: 0}
