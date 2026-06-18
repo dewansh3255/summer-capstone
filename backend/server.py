@@ -38,7 +38,7 @@ import websockets
 from websockets.server import WebSocketServerProtocol
 
 from protocol import deserialize_frame, Frame
-from pipeline import build_point_cloud, Recorder
+from pipeline import build_point_cloud, Recorder, GestureClassifier
 
 # ──────────────────────────────────────────────────────────────────────────────
 # Logging
@@ -99,6 +99,7 @@ async def handle_connection(
     websocket: WebSocketServerProtocol,
     verbose: bool = False,
     recorder: Recorder = None,
+    classifier: GestureClassifier = None,
 ):
     """
     Handles one connected Quest client.
@@ -130,7 +131,7 @@ async def handle_connection(
             # Step 1 ✅  raw bytes → Frame
             # Step 2 ✅  HandData → normalised PointCloud
             # Step 3 ✅  save to disk (if recording mode) / Chamfer Distance
-            # Step 4     classifier.predict(pc)  [TODO]
+            # Step 4 ✅  MLP classifier → gesture label
             # ─────────────────────────────────────────────────────────────────
 
             saved = False
@@ -143,11 +144,13 @@ async def handle_connection(
                         recorder.add(pc)
                         saved = True
 
-                    # Step 3 live inference hook (no reference yet — will
-                    # be wired in once a dataset is collected and a threshold
-                    # is derived via find_optimal_threshold):
-                    #   distance = chamfer_distance_pc(pc, reference_cloud)
-                    #   if distance <= optimal_threshold: predict "same"
+                    if classifier is not None:
+                        label = classifier.predict_label(pc.points)
+                        if verbose:
+                            log.debug(
+                                "Frame %5d → predicted: %s",
+                                frame.frame_index, label,
+                            )
 
             stats.record_frame(frame, saved=saved, verbose=verbose)
 
@@ -178,10 +181,13 @@ async def handle_connection(
 # ──────────────────────────────────────────────────────────────────────────────
 
 async def main(host: str, port: int, verbose: bool,
-               record: bool, gesture: str, recordings_dir: str):
+               record: bool, gesture: str, recordings_dir: str,
+               model_path: str):
     log.info("Starting WebSocket server on ws://%s:%d", host, port)
 
-    recorder = None
+    recorder   = None
+    classifier = None
+
     if record:
         if not gesture:
             raise ValueError("--gesture is required when --record is set.")
@@ -190,10 +196,19 @@ async def main(host: str, port: int, verbose: bool,
     else:
         log.info("Live mode (no recording). Use --record --gesture <label> to save.")
 
+    if model_path:
+        try:
+            classifier = GestureClassifier.load(model_path)
+            log.info("Classifier loaded from '%s'", model_path)
+        except FileNotFoundError:
+            log.warning("Model file '%s' not found — running without classifier.", model_path)
+
     log.info("Waiting for Quest connection…")
 
     async with websockets.serve(
-        lambda ws: handle_connection(ws, verbose=verbose, recorder=recorder),
+        lambda ws: handle_connection(
+            ws, verbose=verbose, recorder=recorder, classifier=classifier
+        ),
         host,
         port,
         max_size=10 * 1024 * 1024,
@@ -216,6 +231,9 @@ if __name__ == "__main__":
                         help="Gesture label for this recording session (e.g. ThumbsUp)")
     parser.add_argument("--recordings-dir", default="recordings",
                         help="Root directory for saved sessions (default: recordings/)")
+    parser.add_argument("--model", default="",
+                        dest="model_path",
+                        help="Path to a saved GestureClassifier .npz for live inference")
 
     args = parser.parse_args()
 
@@ -223,6 +241,7 @@ if __name__ == "__main__":
         asyncio.run(main(
             args.host, args.port, args.verbose,
             args.record, args.gesture, args.recordings_dir,
+            args.model_path,
         ))
     except KeyboardInterrupt:
         log.info("Server stopped.")
