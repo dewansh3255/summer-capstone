@@ -44,8 +44,8 @@ swap sensor ids for muscle names.
 ```
 Phase A ✅  Parsing + preprocessing      delsys_parser.py, preprocess.py
 Phase B ✅  Feature extraction           features.py
-Phase C     Analysis + visualisation     analysis.py     [next]
-Phase D     LLM interpretation           llm.py
+Phase C ✅  Analysis + visualisation     analysis.py
+Phase D     LLM interpretation           llm.py          [next]
 ```
 
 ### Phase A (done)
@@ -74,6 +74,17 @@ Phase D     LLM interpretation           llm.py
   for convenience but is sensitive to end-window spikes, so the two can
   occasionally disagree. Detection always uses the regression slope.
 
+### Phase C (done)
+
+- `analysis.py` — activation onset detection + visualisation.
+  - **Onset detection** (Carvalho et al. 2023): linear envelope (rectify +
+    low-pass) with an adaptive single threshold (`baseline_mean + k*std`) and a
+    minimum-duration filter; optional Teager-Kaiser Energy Operator (TKEO)
+    pre-emphasis for sharper onsets. Returns `ActivationEvent` (onset/offset).
+  - **Plots** (saved PNGs, headless `Agg` backend): RMS-over-time,
+    MDF-over-time, fatigue-ranking bar chart, and a per-channel overview
+    (EMG + envelope + shaded activations).
+
 ## Usage
 
 ```python
@@ -95,6 +106,20 @@ feats = extract_recording_features(push, mvc_references=mvc)
 # 3. Per-sensor fatigue trend table (most-fatigued first)
 summary = fatigue_summary_frame(feats)
 print(summary)
+
+# 4. Visualise + detect activations (Phase C)
+from emg_pipeline import (
+    detect_onsets, plot_rms_trend, plot_mdf_trend,
+    plot_fatigue_ranking, plot_channel_overview,
+)
+
+plot_rms_trend(feats, "output/rms_trend.png", use_pct_mvc=True)
+plot_mdf_trend(feats, "output/mdf_trend.png")
+plot_fatigue_ranking(summary, "output/fatigue_ranking.png")
+
+events = detect_onsets(push.channels["99"])     # activation onsets/offsets
+plot_channel_overview(push.channels["99"], "output/sensor99.png",
+                      events=events, max_seconds=30)
 ```
 
 ## Setup & tests
@@ -104,10 +129,10 @@ pip install -r requirements.txt
 python3 -m pytest emg_pipeline/tests/ -v
 ```
 
-61 tests cover parsing (synthetic + real-data integration), filtering, and
-feature extraction / fatigue metrics. Tests use synthetic signals so they run
-without the real recordings; the real-data test skips automatically when
-`data/` is absent.
+81 tests cover parsing (synthetic + real-data integration), filtering, feature
+extraction / fatigue metrics, and onset detection / plotting. Tests use
+synthetic signals so they run without the real recordings; the real-data test
+skips automatically when `data/` is absent.
 
 ## Data & papers are not committed
 

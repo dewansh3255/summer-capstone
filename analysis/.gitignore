@@ -9,6 +9,10 @@ cache/
 *.npy
 *.parquet
 
+# Generated plots / reports
+output/
+*.png
+
 # Python
 __pycache__/
 *.py[cod]
