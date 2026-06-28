@@ -43,8 +43,8 @@ swap sensor ids for muscle names.
 
 ```
 Phase A ✅  Parsing + preprocessing      delsys_parser.py, preprocess.py
-Phase B     Feature extraction           features.py     [next]
-Phase C     Analysis + visualisation     analysis.py
+Phase B ✅  Feature extraction           features.py
+Phase C     Analysis + visualisation     analysis.py     [next]
 Phase D     LLM interpretation           llm.py
 ```
 
@@ -56,16 +56,45 @@ Phase D     LLM interpretation           llm.py
 - `preprocess.py` — Clancy best-practice conditioning: zero-phase Butterworth
   band-pass (20–450 Hz) + power-line notch (50 Hz, India mains; configurable).
 
+### Phase B (done)
+
+- `features.py` — sliding-window feature extraction (default 250 ms, 50%
+  overlap) computing per window:
+  - **time-domain:** RMS, MAV, integrated EMG, zero-crossings, waveform length
+  - **frequency-domain:** mean frequency (MNF), median frequency (MDF), total power
+  - **%MVC** when a dynamometer/max-effort reference is supplied
+- **MVC reference** from the dynamometer recordings (`compute_mvc_reference`,
+  `combine_mvc_references` — per-sensor max across left/right).
+- **Fatigue-trend metrics** (`compute_fatigue_metrics`): linear fit of RMS(t)
+  and MDF(t) over the task. `fatigue_detected = rms_slope > 0 AND mdf_slope < 0`
+  — the canonical fatigue signature.
+
+  Note: `*_slope` (linear regression over all windows) is the robust trend
+  measure used for detection; `*_pct_change` (endpoint-to-endpoint) is reported
+  for convenience but is sensitive to end-window spikes, so the two can
+  occasionally disagree. Detection always uses the regression slope.
+
 ## Usage
 
 ```python
-from emg_pipeline import parse_delsys_csv, preprocess_recording
+from emg_pipeline import (
+    parse_delsys_csv, preprocess_recording,
+    compute_mvc_reference, combine_mvc_references,
+    extract_recording_features, fatigue_summary_frame,
+)
 
-rec  = parse_delsys_csv("data/Avnish_push1_01.csv")   # 16 EMG channels
-cond = preprocess_recording(rec)                       # filtered copy
+# 1. MVC reference from the dynamometer (max-effort) recordings
+left  = preprocess_recording(parse_delsys_csv("data/Avnish_push1_leftdynamo_01.csv"))
+right = preprocess_recording(parse_delsys_csv("data/Avnish_push1_righydynamo_01.csv"))
+mvc   = combine_mvc_references(compute_mvc_reference(left), compute_mvc_reference(right))
 
-ch = cond.channels["1"]      # EMGChannel for sensor 1
-print(ch.signal, ch.fs)      # conditioned signal (mV), sampling rate (Hz)
+# 2. Features on the main task, normalised to %MVC
+push  = preprocess_recording(parse_delsys_csv("data/Avnish_push1_01.csv"))
+feats = extract_recording_features(push, mvc_references=mvc)
+
+# 3. Per-sensor fatigue trend table (most-fatigued first)
+summary = fatigue_summary_frame(feats)
+print(summary)
 ```
 
 ## Setup & tests
@@ -75,9 +104,10 @@ pip install -r requirements.txt
 python3 -m pytest emg_pipeline/tests/ -v
 ```
 
-30 tests cover parsing (synthetic + real-data integration) and filtering.
-Tests use synthetic signals so they run without the real recordings; the
-real-data test skips automatically when `data/` is absent.
+61 tests cover parsing (synthetic + real-data integration), filtering, and
+feature extraction / fatigue metrics. Tests use synthetic signals so they run
+without the real recordings; the real-data test skips automatically when
+`data/` is absent.
 
 ## Data & papers are not committed
 
