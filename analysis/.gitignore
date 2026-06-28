@@ -1,0 +1,16 @@
+# Research papers — copyrighted, do not commit
+*.pdf
+
+# Raw EMG data — large binary CSVs (track code, not data)
+data/*.csv
+
+# Cached parsed signals
+cache/
+*.npy
+*.parquet
+
+# Python
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+.DS_Store
