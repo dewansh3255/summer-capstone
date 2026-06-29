@@ -3,3 +3,7 @@ scipy==1.13.0
 pandas==2.2.2
 matplotlib==3.9.0
 pytest==8.2.0
+
+# Phase D — LLM interpretation (optional; only needed for OpenAIClient).
+# The rule-based interpreter and all tests work without it.
+openai>=1.30.0

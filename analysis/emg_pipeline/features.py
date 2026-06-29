@@ -383,11 +383,15 @@ def combine_mvc_references(
 # Fatigue-trend metrics
 # ──────────────────────────────────────────────────────────────────────────────
 
-def _linfit_slope(t: np.ndarray, y: np.ndarray) -> float:
-    """Least-squares slope of y vs t. Returns 0 for <2 points or zero span."""
+def _linfit(t: np.ndarray, y: np.ndarray) -> tuple[float, float]:
+    """
+    Least-squares (slope, intercept) of y vs t.
+    Returns (0, mean(y)) for <2 points or zero time span.
+    """
     if len(t) < 2 or np.ptp(t) == 0:
-        return 0.0
-    return float(np.polyfit(t, y, 1)[0])
+        return 0.0, float(np.mean(y)) if len(y) else 0.0
+    slope, intercept = np.polyfit(t, y, 1)
+    return float(slope), float(intercept)
 
 
 def compute_fatigue_metrics(features: ChannelFeatures) -> FatigueMetrics:
@@ -396,6 +400,13 @@ def compute_fatigue_metrics(features: ChannelFeatures) -> FatigueMetrics:
 
     fatigue_detected is True when amplitude rises (rms_slope > 0) AND the
     spectrum compresses (mdf_slope < 0) — the canonical fatigue signature.
+
+    The reported start/end values are the FITTED endpoints of the regression
+    line (value at the first and last window time), NOT the raw first/last
+    window. Single-window endpoints are extremely noisy over a multi-minute
+    recording and can contradict the overall trend; the fitted endpoints are
+    robust and always consistent with the slope sign. Percentage changes are
+    derived from these fitted endpoints for the same reason.
     """
     df = features.df
     sid = features.sensor_id
@@ -409,16 +420,17 @@ def compute_fatigue_metrics(features: ChannelFeatures) -> FatigueMetrics:
         )
 
     t   = df["t_center"].values
-    rms_series = df["rms"].values
-    mdf_series = df["mdf"].values
-    mnf_series = df["mnf"].values
+    t0, t1 = float(t[0]), float(t[-1])
 
-    rms_slope = _linfit_slope(t, rms_series)
-    mdf_slope = _linfit_slope(t, mdf_series)
-    mnf_slope = _linfit_slope(t, mnf_series)
+    rms_slope, rms_b = _linfit(t, df["rms"].values)
+    mdf_slope, mdf_b = _linfit(t, df["mdf"].values)
+    mnf_slope, _     = _linfit(t, df["mnf"].values)
 
-    rms_start, rms_end = float(rms_series[0]), float(rms_series[-1])
-    mdf_start, mdf_end = float(mdf_series[0]), float(mdf_series[-1])
+    # Fitted (robust) endpoints
+    rms_start = rms_slope * t0 + rms_b
+    rms_end   = rms_slope * t1 + rms_b
+    mdf_start = mdf_slope * t0 + mdf_b
+    mdf_end   = mdf_slope * t1 + mdf_b
 
     def pct(a, b):
         return float(100.0 * (b - a) / a) if a != 0 else 0.0
@@ -426,7 +438,7 @@ def compute_fatigue_metrics(features: ChannelFeatures) -> FatigueMetrics:
     return FatigueMetrics(
         sensor_id=sid,
         n_windows=len(df),
-        duration_s=float(t[-1] - t[0]),
+        duration_s=t1 - t0,
         rms_start=rms_start,
         rms_end=rms_end,
         rms_slope=rms_slope,

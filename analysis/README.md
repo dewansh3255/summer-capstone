@@ -69,10 +69,10 @@ Phase D     LLM interpretation           llm.py          [next]
   and MDF(t) over the task. `fatigue_detected = rms_slope > 0 AND mdf_slope < 0`
   — the canonical fatigue signature.
 
-  Note: `*_slope` (linear regression over all windows) is the robust trend
-  measure used for detection; `*_pct_change` (endpoint-to-endpoint) is reported
-  for convenience but is sensitive to end-window spikes, so the two can
-  occasionally disagree. Detection always uses the regression slope.
+  Note: all reported start/end values are the **fitted endpoints** of the
+  regression line (robust), not single noisy first/last windows. This keeps the
+  percentage changes and the natural-language report consistent with the slope
+  sign used for detection.
 
 ### Phase C (done)
 
@@ -84,6 +84,46 @@ Phase D     LLM interpretation           llm.py          [next]
   - **Plots** (saved PNGs, headless `Agg` backend): RMS-over-time,
     MDF-over-time, fatigue-ranking bar chart, and a per-channel overview
     (EMG + envelope + shaded activations).
+
+### Phase D (done)
+
+- `summary.py` — distils the dense feature tables into a compact, JSON-
+  serialisable summary (per sensor: activation level, %MVC, MDF trend, fatigue
+  flag; per recording: counts + most-fatigued). Every number is computed by
+  Phases B/C — the LLM never invents values.
+- `llm.py` — interpretation layer:
+  - `FATIGUE_SYSTEM_PROMPT` encodes the sEMG fatigue rules (RMS↑ + MDF/MNF↓ =
+    fatigue) and a guardrail to only interpret supplied numbers.
+  - `OpenAIClient` — real OpenAI implementation (lazy import; key from
+    `OPENAI_API_KEY`).
+  - `rule_based_report` — deterministic, no-LLM interpreter; works fully
+    offline and is the default when no client is given.
+  - `interpret_fatigue(summary, client=None)` — top-level entry point.
+- `report.py` — end-to-end CLI: parse → preprocess → MVC → features → summary
+  → report.
+
+## Command-line report
+
+```bash
+# Rule-based report (offline, no API key):
+python3 report.py \
+    --task data/Avnish_push1_01.csv \
+    --mvc  data/Avnish_push1_leftdynamo_01.csv data/Avnish_push1_righydynamo_01.csv \
+    --task-name "push task"
+
+# With OpenAI interpretation + plots:
+OPENAI_API_KEY=sk-... python3 report.py \
+    --task data/Avnish_push1_01.csv \
+    --mvc  data/Avnish_push1_leftdynamo_01.csv data/Avnish_push1_righydynamo_01.csv \
+    --llm --model gpt-4o-mini --plots output/
+
+# With a sensor->muscle mapping (JSON {"1": "Biceps", ...}):
+python3 report.py --task data/Avnish_push1_01.csv --labels labels.json
+```
+
+The OpenAI path requires `pip install openai` and the `OPENAI_API_KEY`
+environment variable. Without `--llm`, the deterministic rule-based interpreter
+is used (no key, no network).
 
 ## Usage
 
@@ -129,10 +169,11 @@ pip install -r requirements.txt
 python3 -m pytest emg_pipeline/tests/ -v
 ```
 
-81 tests cover parsing (synthetic + real-data integration), filtering, feature
-extraction / fatigue metrics, and onset detection / plotting. Tests use
-synthetic signals so they run without the real recordings; the real-data test
-skips automatically when `data/` is absent.
+106 tests cover parsing (synthetic + real-data integration), filtering, feature
+extraction / fatigue metrics, onset detection / plotting, and summary / LLM
+interpretation (via a mock client — no API key needed). Tests use synthetic
+signals so they run without the real recordings; the real-data test skips
+automatically when `data/` is absent.
 
 ## Data & papers are not committed
 

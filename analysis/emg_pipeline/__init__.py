@@ -6,7 +6,7 @@ EMG analysis pipeline for Delsys Trigno Discover recordings.
 Phase A: parsing + preprocessing   (delsys_parser, preprocess)   [done]
 Phase B: feature extraction         (features)                    [done]
 Phase C: analysis + visualisation   (analysis)                    [done]
-Phase D: LLM interpretation         (llm)                         [later]
+Phase D: LLM interpretation         (summary, llm)                [done]
 """
 
 from .delsys_parser import (
@@ -41,6 +41,19 @@ from .analysis import (
     plot_fatigue_ranking,
     plot_channel_overview,
 )
+from .summary import (
+    build_sensor_summary,
+    build_recording_summary,
+)
+from .llm import (
+    LLMClient,
+    OpenAIClient,
+    MockLLMClient,
+    FATIGUE_SYSTEM_PROMPT,
+    build_prompt,
+    rule_based_report,
+    interpret_fatigue,
+)
 
 __all__ = [
     # Phase A
@@ -70,4 +83,14 @@ __all__ = [
     "plot_mdf_trend",
     "plot_fatigue_ranking",
     "plot_channel_overview",
+    # Phase D
+    "build_sensor_summary",
+    "build_recording_summary",
+    "LLMClient",
+    "OpenAIClient",
+    "MockLLMClient",
+    "FATIGUE_SYSTEM_PROMPT",
+    "build_prompt",
+    "rule_based_report",
+    "interpret_fatigue",
 ]
